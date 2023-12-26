@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             ProdiSeeder::class,
             AdminSeeder::class,
             MahasiswaSeeder::class,
+            JenisBiayaSeeder::class,
             BiayaKuliahSeeder::class,
             PembayaranSeeder::class,
         ]);

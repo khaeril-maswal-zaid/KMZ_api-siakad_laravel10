@@ -22,14 +22,16 @@ class Biaya_kuliahFactory extends Factory
         //3101 : Kode Prodi
         //1 // Semester
         //1 // Ganjil / Genap
-        $lasyear = fake()->date('Y') - 1;
+
+        $tahun = fake()->numberBetween(2020, 2024);
 
         return [
             "prodi" => fake()->numberBetween(1, 8),
-            "tahun_akademik" => $lasyear . '/' . fake()->date('Y'),
+            "tahun_akademik" => $tahun . '/' . $tahun + 1,
             "semester" => fake()->numberBetween(1, 14),
             "jumlah" => 12345678,
-            "kode_bayar" => fake()->numberBetween(23701310111, 99999999999),
+            "kode_biaya" => fake()->numberBetween(11111111111, 99999999999),
+            "jenis_biaya" => fake()->numberBetween(1, 4),
             "added_by" => 'Defaul',
         ];
     }

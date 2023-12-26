@@ -14,7 +14,8 @@ class Biaya_kuliah extends Model
         "tahun_akademik",
         "semester",
         "jumlah",
-        "kode_bayar",
+        "jenis_biaya",
+        "kode_biaya",
         "added_by",
     ];
 }

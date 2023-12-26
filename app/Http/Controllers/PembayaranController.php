@@ -66,7 +66,7 @@ class PembayaranController extends Controller
         $kodetransaksi = date('dmy') . $request->kodeoleh . $request->nimmahasiswa . random_int(111, 999);
 
         if (Pembayaran::where('kode_transaksi', $kodetransaksi)->exists()) {
-            return new PembayaranResource(422, "Data kode transaksi sudah exsist", $kodetransaksi);
+            return new PembayaranResource(422, "Data kode transaksi telah exsist", $kodetransaksi);
         }
 
         $sisabayar = $pembayaran['jumlah'] - $request->bayar;
