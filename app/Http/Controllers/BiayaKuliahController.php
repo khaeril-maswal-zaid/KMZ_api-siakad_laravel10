@@ -74,7 +74,7 @@ class BiayaKuliahController extends Controller
             return new BiayaKuliahResource(422, "Data yang sama telah exsist", [
                 "Prodi: " . $dataprodi['prodi_full'],
                 "Tahun Akademik: " .  $request->tahun_akademik,
-                'Semister: ' . $request->semester,
+                'Semester: ' . $request->semester,
             ]);
         }
 

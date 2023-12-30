@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('prodi');
             $table->string('matkul', 100);
+            $table->string('kode_matkul', 50)->unique();
             $table->integer('sks');
             $table->integer('semester');
-            $table->string('kode_matkul', 50);
             $table->string('added_by', 200);
             $table->timestamps();
 

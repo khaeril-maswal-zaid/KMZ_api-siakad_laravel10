@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('prodi');
             $table->unsignedBigInteger('mahasiswa');
+            $table->integer('semester');
             $table->unsignedBigInteger('matkul');
+            $table->boolean('programulang');
             $table->timestamps();
 
             $table->foreign('prodi')->references('id')->on('prodis');

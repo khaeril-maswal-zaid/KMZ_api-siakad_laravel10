@@ -4,6 +4,7 @@ use App\Http\Controllers\BiayaKuliahController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\ProdiController;
 use App\Http\Controllers\FakultasController;
+use App\Http\Controllers\MatkulController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\RancanganStudiController;
 use Illuminate\Http\Request;
@@ -35,8 +36,9 @@ Route::post('/biaya-kuliah', [BiayaKuliahController::class, 'store']);
 
 Route::post('/pembayaran', [PembayaranController::class, 'store']);
 
-
 Route::post('/rancangan-studi', [RancanganStudiController::class, 'store']);
+
+Route::post('/mata-kuliah', [MatkulController::class, 'store']);
 
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

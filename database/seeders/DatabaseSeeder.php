@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             MahasiswaSeeder::class,
             BiayaKuliahSeeder::class,
             PembayaranSeeder::class,
+            MatkulSeeder::class
         ]);
 
         //Run ALL : php artisan db:seed --class=DatabaseSeeder
