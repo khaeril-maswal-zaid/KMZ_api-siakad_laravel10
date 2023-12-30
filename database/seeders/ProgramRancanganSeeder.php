@@ -12,6 +12,8 @@ class ProgramRancanganSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        \App\Models\Program_rancangan::factory(70)->create();
     }
+
+    //php artisan db:seed --class=ProgramRancanganSeeder
 }

@@ -12,7 +12,7 @@ class MatkulSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Matkul::factory(15)->create();
+        \App\Models\Matkul::factory(50)->create();
     }
 
     //php artisan db:seed --class=MatkulSeeder

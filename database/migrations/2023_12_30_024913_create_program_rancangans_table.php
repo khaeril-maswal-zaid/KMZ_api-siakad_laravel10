@@ -13,7 +13,15 @@ return new class extends Migration
     {
         Schema::create('program_rancangans', function (Blueprint $table) {
             $table->id();
+            $table->string('angkatan', 4);
+            $table->string('kode_program', 11)->unique();
+            $table->unsignedBigInteger('prodi');
+            $table->unsignedBigInteger('matkul');
+            $table->string('added_by', 200);
             $table->timestamps();
+
+            $table->foreign('prodi')->references('id')->on('prodis');
+            $table->foreign('matkul')->references('id')->on('matkuls');
         });
     }
 

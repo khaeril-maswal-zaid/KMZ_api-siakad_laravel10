@@ -22,7 +22,7 @@ return new class extends Migration
 
             $table->foreign('prodi')->references('id')->on('prodis');
             $table->foreign('mahasiswa')->references('id')->on('mahasiswas');
-            $table->foreign('matkul')->references('id')->on('matkuls');
+            $table->foreign('matkul')->references('id')->on('program_rancangans');
         });
     }
 
