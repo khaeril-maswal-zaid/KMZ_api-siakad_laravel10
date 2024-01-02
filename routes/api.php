@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BiayaKuliahController;
+use App\Http\Controllers\BiayaProlangController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\ProdiController;
 use App\Http\Controllers\FakultasController;
@@ -8,7 +9,7 @@ use App\Http\Controllers\MatkulController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\ProgramRancanganController;
 use App\Http\Controllers\RancanganStudiController;
-use App\Models\Program_rancangan;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -50,6 +51,10 @@ Route::post('/program-rancangan', [ProgramRancanganController::class, 'store']);
 
 
 Route::post('/rancangan-studi', [RancanganStudiController::class, 'store']);
+
+
+Route::post('/program-ulang', [BiayaProlangController::class, 'store']);
+
 
 
 

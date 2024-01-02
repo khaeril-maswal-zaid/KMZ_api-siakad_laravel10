@@ -11,17 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('biaya_kuliahs', function (Blueprint $table) {
+        Schema::create('program_prolangs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('prodi');
             $table->string('tahun_akademik', 10);
-            $table->integer('semester');
-            $table->integer('jumlah');
-            $table->string('kode_bayar', 20)->unique();
-            $table->string('added_by', 200);
+            $table->unsignedBigInteger('matkul');
+            $table->unsignedBigInteger('prolang');
+            $table->boolean('lunas');
             $table->timestamps();
 
             $table->foreign('prodi')->references('id')->on('prodis');
+            $table->foreign('matkul')->references('id')->on('rancangan_studis');
+            $table->foreign('prolang')->references('id')->on('prolangs');
         });
     }
 
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('biaya_kuliahs');
+        Schema::dropIfExists('program_prolangs');
     }
 };

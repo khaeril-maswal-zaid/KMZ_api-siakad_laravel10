@@ -40,15 +40,15 @@ class PembayaranController extends Controller
         $datapembayaran = Biaya_kuliah::select('id', 'jumlah', 'prodi')->where('kode_bayar', $request->kodebayar)->first();
 
         if (!isset($datamahasiswa)) {
-            return new PembayaranResource(404, "Mahasiswa tidak ditemukan!", null);
+            return new PembayaranResource(422, "Mahasiswa tidak ditemukan!", null);
         }
 
         if (!isset($dataprodi)) {
-            return new PembayaranResource(404, "Prodi tidak ditemukan!", null);
+            return new PembayaranResource(422, "Prodi tidak ditemukan!", null);
         }
 
         if (!isset($datapembayaran)) {
-            return new PembayaranResource(404, "Kode bayar tidak ditemukan!", null);
+            return new PembayaranResource(422, "Kode bayar tidak ditemukan!", null);
         }
         //-----------------------------------------------------------------------------------------
 
