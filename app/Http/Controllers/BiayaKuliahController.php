@@ -84,7 +84,7 @@ class BiayaKuliahController extends Controller
 
         //create post
         $post = Biaya_kuliah::create([
-            "prodi" => $prodi['id'],
+            "prodi" => $dataprodi['id'],
             'tahun_akademik' => $request->tahun_akademik,
             "semester" => $request->semester,
             'jumlah' => $request->jumlah,

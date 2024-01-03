@@ -5,16 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Matkul extends Model
+class Program_prolang extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'prodi',
+        'tahun_akademik',
+        'mahasiswa',
         'matkul',
-        'kode_matkul',
-        'sks',
-        'semester',
-        'added_by'
+        'prolang',
+        'lunas',
     ];
 }

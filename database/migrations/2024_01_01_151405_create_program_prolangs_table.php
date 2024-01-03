@@ -11,16 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rancangan_studis', function (Blueprint $table) {
+        Schema::create('program_prolangs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('prodi');
-            $table->unsignedBigInteger('mahasiswa');
+            $table->string('tahun_akademik', 10);
             $table->unsignedBigInteger('matkul');
+            $table->unsignedBigInteger('prolang');
+            $table->boolean('lunas');
             $table->timestamps();
 
             $table->foreign('prodi')->references('id')->on('prodis');
-            $table->foreign('mahasiswa')->references('id')->on('mahasiswas');
-            $table->foreign('matkul')->references('id')->on('matkuls');
+            $table->foreign('matkul')->references('id')->on('rancangan_studis');
+            $table->foreign('prolang')->references('id')->on('prolangs');
         });
     }
 
@@ -29,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rancangan_studis');
+        Schema::dropIfExists('program_prolangs');
     }
 };

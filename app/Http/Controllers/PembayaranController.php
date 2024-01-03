@@ -16,11 +16,11 @@ class PembayaranController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'from_bank' => 'required',
+            'from_bank' => 'required|unique:pembayarans',
             'nimmahasiswa' => 'required|numeric',
             'namamahasiswa' => 'required',
             'kodeprodi' => 'required|numeric',
-            'total_biaya' => 'required|numeric',
+            'kodebayar' => 'required|numeric',
             'bayar' => 'required|numeric|min:100000',
             'kodeoleh' => 'required|numeric|digits_between:3,3',
             'added_by' => 'required',
@@ -33,43 +33,77 @@ class PembayaranController extends Controller
         }
 
 
+        //Cek ketersediaan data
         //----------------------------------------------------------------------------------------
-        $datamahasiswa = Mahasiswa::select('id', 'nama')->where('nim', $request->nimmahasiswa)->first();
-        $id_prodi = Prodi::select('id')->where('kode_prodi', $request->kodeprodi)->get()->value('id');
-        $datapembayaran = Biaya_kuliah::select('id', 'jumlah')->where('kode_bayar', $request->kodebayar)->first();
+        $datamahasiswa = Mahasiswa::select('id', 'nama', 'prodi')->where('nim', $request->nimmahasiswa)->first();
+        $dataprodi = Prodi::select('id', 'prodi_full')->where('kode_prodi', $request->kodeprodi)->first();
+        $datapembayaran = Biaya_kuliah::select('id', 'jumlah', 'prodi')->where('kode_bayar', $request->kodebayar)->first();
 
         if (!isset($datamahasiswa)) {
-            return new PembayaranResource(404, "'id_mahasiswa' Not Found!", null);
+            return new PembayaranResource(422, "Mahasiswa tidak ditemukan!", null);
         }
-        $mahasiswa = $datamahasiswa->toArray();
 
-        if (!isset($id_prodi)) {
-            return new PembayaranResource(404, "'id_prodi' Not Found!", null);
+        if (!isset($dataprodi)) {
+            return new PembayaranResource(422, "Prodi tidak ditemukan!", null);
         }
 
         if (!isset($datapembayaran)) {
-            return new PembayaranResource(404, "'id_bayar' Not Found!", null);
+            return new PembayaranResource(422, "Kode bayar tidak ditemukan!", null);
         }
-        $pembayaran = $datapembayaran->toArray();
         //-----------------------------------------------------------------------------------------
 
 
 
         //TERIMA DATA NIM DAN NAMA MAHASISWA
         //QUERY NIM KEMUDIAN HASILNYA SEIMBANGKAN DENGAN NAMA YANG DITERIMA
-        if ($mahasiswa['nama'] != $request->namamahasiswa) {
+        if ($datamahasiswa['nama'] != $request->namamahasiswa) {
             return new PembayaranResource(422, "'nama' Error!", null);
         };
 
-        //KODE TRANSAKSI
-        //date=>dmy + kode oleh + nim + random=> 3 digit
-        $kodetransaksi = date('dmy') . $request->kodeoleh . $request->nimmahasiswa . random_int(111, 999);
+        $prodibymahasiswa = Prodi::select('prodi_full')->findOrFail($datamahasiswa['prodi']);
+        $prodibypembayaran = Prodi::select('prodi_full')->findOrFail($datapembayaran['prodi']);
 
         if (Pembayaran::where('kode_transaksi', $kodetransaksi)->exists()) {
             return new PembayaranResource(422, "Data kode transaksi telah exsist", $kodetransaksi);
         }
 
-        $sisabayar = $pembayaran['jumlah'] - $request->bayar;
+        //KODE TRANSAKSI
+        //date=>dmy + kode oleh + nim + random=> 3 digit
+        $kodetransaksi = date('dmy') .  $request->nimmahasiswa . $request->kodeoleh . random_int(111, 999);
+
+        if (Pembayaran::where('kode_transaksi', $kodetransaksi)->exists()) {
+            return new PembayaranResource(422, "Ulangi!, Terdapat kesalahan", null);
+        }
+
+        //Sisa bayar
+        $sisabayar = $datapembayaran['jumlah'] - $request->bayar;
+
+        //UNTUK PEMBAYARN LEBIH DARI 1 KALI
+        $sisabayarlama = (Pembayaran::select('sisa_bayar')->where('total_biaya', $datapembayaran['id'])->where('mahasiswa', $datamahasiswa['id'])->latest()->value('sisa_bayar'));
+
+        if (isset($sisabayarlama) && $sisabayarlama > 0) {
+            //Cek jumlah bayar dengan inputan bayar
+            if ($request->bayar > $sisabayarlama) {
+                return new PembayaranResource(422, "Jumlah bayar melebihi harga semestinya", [
+                    'Jumlah semestinya:' => $sisabayarlama,
+                    'Yang anda bayar:' => $request->bayar
+                ]);
+            }
+
+            $sisabayar = $sisabayarlama - $request->bayar;
+            Pembayaran::where('total_biaya', $datapembayaran['id'])->where('mahasiswa', $datamahasiswa['id'])->latest()->first()->update(['lunas' => true]);
+        } elseif (isset($sisabayarlama) && $sisabayarlama == 0) {
+            return new PembayaranResource(422, "Pembayaran sebelumnya telah lunas",  $sisabayarlama);
+        }
+        //--------------------------------
+
+        //Cek jumlah bayar dengan inputan bayar
+        if ($request->bayar > $datapembayaran['jumlah']) {
+            return new PembayaranResource(422, "Jumlah bayar melebihi harga semestinya", [
+                'Jumlah semestinya:' => $datapembayaran['jumlah'],
+                'Yang anda bayar:' => $request->bayar
+            ]);
+        }
 
         if ($sisabayar == 0) {
             $lunas = true;
@@ -80,9 +114,9 @@ class PembayaranController extends Controller
         $post = Pembayaran::create([
             'kode_transaksi' => $kodetransaksi,
             'from_bank' => $request->from_bank,
-            'mahasiswa' => $mahasiswa['id'],
-            'prodi' => $id_prodi,
-            'total_biaya' => $pembayaran['id'],
+            'mahasiswa' => $datamahasiswa['id'],
+            'prodi' => $dataprodi['id'],
+            'total_biaya' => $datapembayaran['id'],
             'bayar' => $request->bayar,
             'sisa_bayar' => $sisabayar,
             'lunas' => $lunas,
